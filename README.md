@@ -1,6 +1,6 @@
 # tellme
 
-[![Crates.io](https://img.shields.io/crates/v/tellme.svg)](https://crates.io/crates/tellme)
+[![Release](https://github.com/fagao-ai/tellme/actions/workflows/release.yml/badge.svg)](https://github.com/fagao-ai/tellme/actions/workflows/release.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **tellme** is a CLI tool that probes OpenAI-compatible model serving endpoints (vLLM, TGI, SGLang, etc.) to verify whether key features like **tool-calling** and **reasoning** are properly configured.
@@ -14,6 +14,35 @@ Forgetting `--tool-call-parser` or `--reasoning-parser` when starting a vLLM ser
 - **Human-readable output** — Markdown with ✓ / ✗ indicators
 - **Works with any OpenAI-compatible API** — vLLM, TGI, SGLang, etc.
 - **Zero configuration** — just a `--base-url`
+
+## Installation
+
+### Install script (Linux / macOS)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/fagao-ai/tellme/main/scripts/install.sh | sudo sh
+```
+
+### Install script (Windows PowerShell)
+
+```powershell
+iex "& { $(Invoke-RestContent https://raw.githubusercontent.com/fagao-ai/tellme/main/scripts/install.ps1) }"
+```
+
+### From source
+
+```bash
+cargo install tellme
+```
+
+### Build from source
+
+```bash
+git clone https://github.com/fagao-ai/tellme.git
+cd tellme
+cargo build --release
+./target/release/tellme --help
+```
 
 ## Usage
 
@@ -45,23 +74,6 @@ tellme check --base-url http://localhost:8008/v1 --tool-call --model Qwen3.6-27B
 - **Tool Call**:  ✓ 已启用
 - **Reasoning**:  ✗ 未检测到
   - **提示**: 响应中未发现 reasoning_content 或 reasoning 字段，可能模型不支持推理或未配置 --reasoning-parser
-```
-
-## Installation
-
-### From source
-
-```bash
-cargo install tellme
-```
-
-### Build from source
-
-```bash
-git clone https://github.com/your-username/tellme.git
-cd tellme
-cargo build --release
-./target/release/tellme --help
 ```
 
 ## How it works

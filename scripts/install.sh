@@ -1,0 +1,79 @@
+#!/bin/bash
+set -e
+
+REPO="fagao-ai/tellme"
+
+# 检测操作系统和架构
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+
+case "$OS" in
+  Linux)
+    OS_TYPE="linux"
+    ;;
+  Darwin)
+    OS_TYPE="darwin"
+    ;;
+  *)
+    echo "Unsupported OS: $OS"
+    exit 1
+    ;;
+esac
+
+case "$ARCH" in
+  x86_64|amd64)
+    ARCH_TYPE="amd64"
+    ;;
+  aarch64|arm64)
+    ARCH_TYPE="arm64"
+    ;;
+  *)
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+    ;;
+esac
+
+# 获取最新版本
+LATEST_VERSION=$(curl -sf https://api.github.com/repos/$REPO/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+
+if [ -z "$LATEST_VERSION" ]; then
+  echo "Failed to fetch latest version"
+  exit 1
+fi
+
+echo "Installing tellme $LATEST_VERSION for $OS_TYPE-$ARCH_TYPE..."
+
+# 下载
+BINARY_NAME="tellme-$OS_TYPE-$ARCH_TYPE"
+DOWNLOAD_URL="https://github.com/$REPO/releases/download/${LATEST_VERSION}/${BINARY_NAME}"
+echo "Downloading from $DOWNLOAD_URL..."
+
+TMP_DIR=$(mktemp -d)
+cd "$TMP_DIR"
+curl -L "$DOWNLOAD_URL" -o tellme
+
+# 安装
+if [ -w "/usr/local/bin" ]; then
+  BIN_DIR="/usr/local/bin"
+else
+  BIN_DIR="$HOME/.local/bin"
+  mkdir -p "$BIN_DIR"
+fi
+
+echo "Installing to $BIN_DIR..."
+chmod +x tellme
+mv tellme "$BIN_DIR/tellme"
+
+# 清理
+cd -
+rm -rf "$TMP_DIR"
+
+echo "✓ tellme has been installed to $BIN_DIR/tellme"
+echo ""
+echo "Add to PATH if needed:"
+if [ "$BIN_DIR" = "$HOME/.local/bin" ]; then
+  echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
+fi
+echo ""
+echo "Verify installation:"
+echo "  tellme --version"
