@@ -35,7 +35,7 @@ pub async fn run(base_url: &str, api_key: Option<String>, model_override: Option
             {
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": "What do you see in this image? Reply in one short sentence."},
+                    {"type": "text", "text": "Read all the text in this image. Reply with the exact text you see."},
                     {
                         "type": "image_url",
                         "image_url": {

@@ -1,9 +1,19 @@
-# tellme
+<!-- markdownlint-disable MD001 MD041 -->
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo.svg">
+    <img alt="tellme" src="assets/logo.svg" width=32%>
+  </picture>
+</p>
 
-[![Release](https://github.com/fagao-ai/tellme/actions/workflows/release.yml/badge.svg)](https://github.com/fagao-ai/tellme/actions/workflows/release.yml)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+<h3 align="center">
+Probe OpenAI-compatible model endpoints for tool-calling, reasoning, and vision support
+</h3>
 
-**tellme** is a CLI tool that probes OpenAI-compatible model serving endpoints (vLLM, TGI, SGLang, etc.) to verify whether key features like **tool-calling**, **reasoning**, and **vision** are properly configured.
+<p align="center">
+  <a href="https://github.com/fagao-ai/tellme/actions/workflows/release.yml"><img alt="Release" src="https://github.com/fagao-ai/tellme/actions/workflows/release.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+</p>
 
 Forgetting `--tool-call-parser` or `--reasoning-parser` when starting a vLLM server? tellme catches it in seconds.
 
@@ -14,7 +24,7 @@ Forgetting `--tool-call-parser` or `--reasoning-parser` when starting a vLLM ser
 - **Tool-call check** — sends a request with `tools` parameter and checks if the model responds with `tool_calls`
 - **Reasoning check** — sends a reasoning prompt and checks for `reasoning_content` / `reasoning` fields in the response
 - **Vision check** — sends an image in OpenAI vision format and verifies the model responds with text
-- **Human-readable output** — Markdown with ✓ / ✗ indicators
+- **Terminal dashboard** — UTF-8 rounded borders, color-coded status, structured panels
 - **Performance metrics** — tok/s, token counts, and latency for each request
 - **Works with any OpenAI-compatible API** — vLLM, TGI, SGLang, etc.
 - **Optional API key** — supports `--api-key` for authenticated services, omit for open services
@@ -75,18 +85,40 @@ tellme vlm --base-url http://localhost:8008/v1 --model Qwen2.5-VL-7B
 
 ## Output
 
-```markdown
-# 检查报告
+```
+╭──────────────────╮
+│  tellme · LLM   │
+╰──────────────────╯
 
-## 服务器状态
-- **地址**: http://localhost:8008/v1
-- **模型**: Qwen3.6-27B
-- **响应**: ✓ 正常
+╭──────────┬───────────────────────────────╮
+│  Server  ┆                               │
+╞══════════╪═══════════════════════════════╡
+│ Address  ┆ https://openrouter.ai/api/v1/ │
+│ Model    ┆ qwen/qwen3.6-27b              │
+│ Status   ┆ ✓ Connected                   │
+╰──────────┴───────────────────────────────╯
 
-## 功能检查
-- **Tool Call**:  ✓ 已启用
-- **Reasoning**:  ✗ 未检测到
-  - **提示**: 响应中未发现 reasoning_content 或 reasoning 字段，可能模型不支持推理或未配置 --reasoning-parser
+▸ Feature Checks
+
+╭─────────────┬─────────────────────────────────╮
+│  Tool Call  ┆                                 │
+╞═════════════╪═════════════════════════════════╡
+│ Status      ┆ ✓ Enabled                       │
+│ Latency     ┆ 1.11s                           │
+│ Throughput  ┆ 53.9 tok/s                      │
+│ Tokens      ┆ Prompt: 279  Completion: 60     │
+│             ┆ Total: 339                      │
+╰─────────────┴─────────────────────────────────╯
+
+╭─────────────┬─────────────────────────────────╮
+│  Reasoning  ┆                                 │
+╞═════════════╪═════════════════════════════════╡
+│ Status      ┆ ✓ Enabled                       │
+│ Latency     ┆ 0.84s                           │
+│ Throughput  ┆ 1401.2 tok/s                    │
+│ Tokens      ┆ Prompt: 33  Completion: 1172    │
+│             ┆ Total: 1205                     │
+╰─────────────┴─────────────────────────────────╯
 ```
 
 ## How it works

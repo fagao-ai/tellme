@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="promptGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+    <linearGradient id="checkGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Smooth Dark Background -->
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#bg1)" stroke="#334155" stroke-width="4"/>
+
+  <!-- Terminal Prompt '>' -->
+  <path d="M 64 96 L 112 136 L 64 176"
+        fill="none" stroke="url(#promptGlow)" stroke-width="24"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Verification Checkmark '✓' -->
+  <path d="M 124 148 L 156 180 L 204 100"
+        fill="none" stroke="url(#checkGlow)" stroke-width="24"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- AI Sparkle Icon -->
+  <path d="M 180 45 Q 180 70 205 70 Q 180 70 180 95 Q 180 70 155 70 Q 180 70 180 45 Z"
+        fill="#F472B6"/>
+</svg>

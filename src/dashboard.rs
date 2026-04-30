@@ -10,9 +10,10 @@ pub fn banner(subtitle: &str) {
     let text = format!(" tellme · {} ", subtitle);
     let width = text.chars().count();
     let bar = "─".repeat(width);
+    let inner = format!("│{}│", text).bold().white();
     println!();
     println!("{}", format!("╭{}╮", bar).bright_black());
-    println!("{}", text.bold().white());
+    println!("{}", inner);
     println!("{}", format!("╰{}╯", bar).bright_black());
     println!();
 }
