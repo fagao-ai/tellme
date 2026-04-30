@@ -3,17 +3,21 @@
 [![Release](https://github.com/fagao-ai/tellme/actions/workflows/release.yml/badge.svg)](https://github.com/fagao-ai/tellme/actions/workflows/release.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**tellme** is a CLI tool that probes OpenAI-compatible model serving endpoints (vLLM, TGI, SGLang, etc.) to verify whether key features like **tool-calling** and **reasoning** are properly configured.
+**tellme** is a CLI tool that probes OpenAI-compatible model serving endpoints (vLLM, TGI, SGLang, etc.) to verify whether key features like **tool-calling**, **reasoning**, and **vision** are properly configured.
 
 Forgetting `--tool-call-parser` or `--reasoning-parser` when starting a vLLM server? tellme catches it in seconds.
 
 ## Features
 
+- **LLM check** (`tellme llm`) — tool-call and reasoning capability probing
+- **VLM check** (`tellme vlm`) — vision/image-input capability probing
 - **Tool-call check** — sends a request with `tools` parameter and checks if the model responds with `tool_calls`
 - **Reasoning check** — sends a reasoning prompt and checks for `reasoning_content` / `reasoning` fields in the response
+- **Vision check** — sends an image in OpenAI vision format and verifies the model responds with text
 - **Human-readable output** — Markdown with ✓ / ✗ indicators
+- **Performance metrics** — tok/s, token counts, and latency for each request
 - **Works with any OpenAI-compatible API** — vLLM, TGI, SGLang, etc.
-- **Zero configuration** — just a `--base-url`
+- **Optional API key** — supports `--api-key` for authenticated services, omit for open services
 
 ## Installation
 
@@ -48,16 +52,25 @@ cargo build --release
 
 ```bash
 # Check tool-call support
-tellme check --base-url http://localhost:8008/v1 --tool-call
+tellme llm --base-url http://localhost:8008/v1 --tool-call
 
 # Check reasoning support
-tellme check --base-url http://localhost:8008/v1 --reasoning
+tellme llm --base-url http://localhost:8008/v1 --reasoning
 
 # Check both
-tellme check --base-url http://localhost:8008/v1 --tool-call --reasoning
+tellme llm --base-url http://localhost:8008/v1 --tool-call --reasoning
 
 # Specify a model name explicitly
-tellme check --base-url http://localhost:8008/v1 --tool-call --model Qwen3.6-27B
+tellme llm --base-url http://localhost:8008/v1 --tool-call --model Qwen3.6-27B
+
+# With API key for authenticated services
+tellme llm --base-url https://api.openai.com/v1 --api-key sk-xxx --tool-call
+
+# Check VLM (vision) support
+tellme vlm --base-url http://localhost:8008/v1
+
+# Check VLM with specific model
+tellme vlm --base-url http://localhost:8008/v1 --model Qwen2.5-VL-7B
 ```
 
 ## Output
@@ -83,6 +96,7 @@ tellme check --base-url http://localhost:8008/v1 --tool-call --model Qwen3.6-27B
 | Health | `GET /v1/models` | Server responds with model list |
 | Tool-call | `POST /chat/completions` with `tools` | Response contains `tool_calls` |
 | Reasoning | `POST /chat/completions` with reasoning prompt | Response contains `reasoning_content` or `reasoning` |
+| Vision | `POST /chat/completions` with `image_url` content | Response contains non-empty text content |
 
 ## License
 
